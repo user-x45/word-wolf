@@ -167,11 +167,6 @@ function roommakeNext(){
 	}
 }
 
-/* 結果画面から「テーマを変えて続行」: 名前は保持したままセットアップ画面に戻る */
-function continueWithSetup(){
-	goScreen("setup");
-}
-
 /* ---------- ステップ2: 名前入力 ---------- */
 
 function buildNameInputs(){
