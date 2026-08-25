@@ -345,6 +345,15 @@ function setAnnounce(){
 }
 
 /* 同じメンバー・同じ設定でもう一度（お題だけ引き直す） */
+/* 結果画面：同じテーマのままお題だけ引き直して続行 */
+function sameThemeContinue(){
+	const q = pickQuestion(state.category);
+	state.val1 = q[1];
+	state.val2 = q[2];
+	makeOdaiMap();
+	startOdaiCheck();
+}
+
 /* お題だけ変更する専用画面を開く（現在のテーマを初期選択にする） */
 let odaiChangeCategory = null;
 
