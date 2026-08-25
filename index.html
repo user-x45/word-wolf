@@ -319,6 +319,7 @@ input.name-input::placeholder{color:var(--text-muted);}
 					<input type="text" inputmode="numeric" pattern="[0-9]*" id="talktime_min" class="time-input" value="3" maxlength="2" oninput="onTimeInput(this,'min')">分
 					<input type="text" inputmode="numeric" pattern="[0-9]*" id="talktime_sec" class="time-input" value="00" maxlength="2" oninput="onTimeInput(this,'sec')">秒
 				</div>
+				<div class="error-msg" id="error_talktime">1秒以上を設定してください</div>
 			</div>
 		</div>
 
@@ -364,7 +365,8 @@ input.name-input::placeholder{color:var(--text-muted);}
 			<div class="category-tag" id="game-category"></div>
 			<p style="opacity:.8;margin-bottom:0;">自分のお題について、バレないように話し合おう！</p>
 			<div class="timer-circle"><div class="time" id="time">--:--</div></div>
-			<button class="btn-main" onclick="confirmFinish()">トークを終える</button>
+			<p style="opacity:.6;font-size:.85em;">トークタイムが終わると自動的に次の画面に進みます</p>
+			<button class="btn-sub" onclick="cancelGame()">最初の画面に戻る</button>
 		</div>
 	</section>
 
@@ -386,9 +388,21 @@ input.name-input::placeholder{color:var(--text-muted);}
 		<div class="card">
 			<div class="reveal-list" id="waitmember"></div>
 		</div>
-		<button class="btn-main" onclick="rensen()">同じテーマ・お題だけ変えて続行</button>
+		<button class="btn-main" onclick="openOdaiChange()">お題だけ変えて続行</button>
 		<button class="btn-sub" onclick="continueWithSetup()">テーマを変えて続行（名前は引き継ぐ）</button>
 		<button class="btn-sub" onclick="resetAll()">最初からやり直す</button>
+	</section>
+
+	<!-- 5.5 お題だけ変更する専用画面 -->
+	<section id="screen-odaichange" class="screen">
+		<div class="card">
+			<div class="field" style="margin-bottom:8px;">
+				<label>お題を引き直すテーマを選んでください</label>
+			</div>
+			<div class="cat-grid" id="cat-grid-change"></div>
+		</div>
+		<button class="btn-main" onclick="applyOdaiChange()">このテーマでお題を引く</button>
+		<button class="btn-sub" onclick="goScreen('finish')">戻る</button>
 	</section>
 
 </div>
