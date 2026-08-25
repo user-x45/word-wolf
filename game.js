@@ -28,18 +28,18 @@ const state = {
 
 /* ---------- 初期化 ---------- */
 
-function buildCategoryGrid(){
-	const grid = document.getElementById("cat-grid");
+function buildCategoryGrid(gridId, selectedId, onSelect){
+	const grid = document.getElementById(gridId);
 	grid.innerHTML = "";
 	CATEGORIES.forEach(cat => {
 		const btn = document.createElement("button");
 		btn.type = "button";
-		btn.className = "cat-btn" + (cat.random ? " random" : "") + (cat.id === state.category ? " selected" : "");
+		btn.className = "cat-btn" + (cat.random ? " random" : "") + (cat.id === selectedId ? " selected" : "");
 		btn.dataset.catId = cat.id;
 		btn.textContent = cat.name;
 		btn.onclick = () => {
-			state.category = cat.id;
-			document.querySelectorAll(".cat-btn").forEach(b => b.classList.remove("selected"));
+			onSelect(cat.id);
+			grid.querySelectorAll(".cat-btn").forEach(b => b.classList.remove("selected"));
 			btn.classList.add("selected");
 		};
 		grid.appendChild(btn);
@@ -141,6 +141,12 @@ function roommakeNext(){
 		error = true;
 	} else {
 		document.getElementById("error_wordwolfcount").style.display = "none";
+	}
+	if(state.talktime <= 0){
+		document.getElementById("error_talktime").style.display = "block";
+		error = true;
+	} else {
+		document.getElementById("error_talktime").style.display = "none";
 	}
 	if(error){
 		alert("入力内容に誤りがあります。");
@@ -279,6 +285,15 @@ function startGame(){
 	timer();
 }
 
+function restartTimer(){
+	timer();
+}
+
+function cancelGame(){
+	if(timerInterval) clearInterval(timerInterval);
+	resetAll();
+}
+
 function frontZero(num){
 	if(num < 10) return "0" + num;
 	return "" + num;
@@ -335,7 +350,17 @@ function setAnnounce(){
 }
 
 /* 同じメンバー・同じ設定でもう一度（お題だけ引き直す） */
-function rensen(){
+/* お題だけ変更する専用画面を開く（現在のテーマを初期選択にする） */
+let odaiChangeCategory = null;
+
+function openOdaiChange(){
+	odaiChangeCategory = state.category;
+	buildCategoryGrid("cat-grid-change", odaiChangeCategory, (id) => { odaiChangeCategory = id; });
+	goScreen("odaichange");
+}
+
+function applyOdaiChange(){
+	state.category = odaiChangeCategory;
 	const q = pickQuestion(state.category);
 	state.val1 = q[1];
 	state.val2 = q[2];
@@ -346,7 +371,7 @@ function rensen(){
 /* 最初からやり直す */
 function resetAll(){
 	state.members = [];
-	buildCategoryGrid();
+	buildCategoryGrid("cat-grid", state.category, (id) => { state.category = id; });
 	goScreen("setup");
 }
 
@@ -356,5 +381,5 @@ window.addEventListener("DOMContentLoaded", () => {
 	state.talktime = 180;
 	document.getElementById("talktime_min").addEventListener("blur", normalizeTimeInputs);
 	document.getElementById("talktime_sec").addEventListener("blur", normalizeTimeInputs);
-	buildCategoryGrid();
+	buildCategoryGrid("cat-grid", state.category, (id) => { state.category = id; });
 });
