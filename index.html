@@ -364,8 +364,17 @@ input.name-input::placeholder{color:var(--text-muted);}
 			<div class="category-tag" id="game-category"></div>
 			<p style="opacity:.8;margin-bottom:0;">自分のお題について、バレないように話し合おう！</p>
 			<div class="timer-circle"><div class="time" id="time">--:--</div></div>
-			<button class="btn-main" onclick="goFinish()">トークを終える</button>
+			<button class="btn-main" onclick="confirmFinish()">トークを終える</button>
 		</div>
+	</section>
+
+	<!-- 4.5 終了確認画面（答えが見える前のワンクッション） -->
+	<section id="screen-confirm" class="screen">
+		<div class="center-stage" style="padding-top:20px;">
+			<div class="msg2" style="font-size:1.5em;">トーク終了</div>
+			<p style="opacity:.8;">話し合いは終わりましたか？<br>次の画面で答えが表示されます。</p>
+		</div>
+		<button class="btn-main" onclick="revealAnswers()">答え合わせをする</button>
 	</section>
 
 	<!-- 5. 結果発表画面 -->
