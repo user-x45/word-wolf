@@ -303,15 +303,21 @@ function timer(){
 		timeEl.textContent = frontZero((sec / 60) | 0) + ":" + frontZero(sec % 60);
 		if(sec === 0){
 			clearInterval(timerInterval);
-			goFinish();
+			confirmFinish();
 		}
 	}, 250);
 }
 
+/* ---------- ステップ4.5: 終了確認（ワンクッション） ---------- */
+
+function confirmFinish(){
+	if(timerInterval) clearInterval(timerInterval);
+	goScreen("confirm");
+}
+
 /* ---------- ステップ5: 結果発表 ---------- */
 
-function goFinish(){
-	if(timerInterval) clearInterval(timerInterval);
+function revealAnswers(){
 	setAnnounce();
 	goScreen("finish");
 }
