@@ -24,18 +24,42 @@ const state = {
 	settings: null,
 	lastPlayers: [],
 	selectedVote: null,
-	changeThemeCategory: 1
+	changeThemeCategory: 1,
+	gameEnded: false // ゲームが異常終了/エラー終了した後の再接続防止フラグ
 };
 
 /* ---------- 画面遷移 ---------- */
+
+// ホストが「ゲームを終了する」ボタンを出してよい画面（ロビー作成後〜結果画面まで）
+const HOST_END_VISIBLE_SCREENS = ["share", "waiting", "game", "vote", "result", "changetheme"];
 
 function goScreen(name){
 	document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
 	document.getElementById("screen-" + name).classList.add("active");
 	window.scrollTo(0, 0);
+	updateHostEndButtonVisibility(name);
+}
+
+function updateHostEndButtonVisibility(screenName){
+	const btn = document.getElementById("host-end-fixed");
+	if(!btn) return;
+	const show = state.isHost && !!state.ws && HOST_END_VISIBLE_SCREENS.includes(screenName);
+	btn.style.display = show ? "block" : "none";
+}
+
+function confirmHostEnd(){
+	if(!state.ws) return;
+	const ok = window.confirm("本当にゲームを終了しますか？参加者全員に通知され、ルームは終了します。");
+	if(!ok) return;
+	try{
+		state.ws.send(JSON.stringify({ type: "hostEnd" }));
+	}catch(e){ /* ignore */ }
+	const btn = document.getElementById("host-end-fixed");
+	if(btn) btn.disabled = true;
 }
 
 function showError(message){
+	stopTimer();
 	document.getElementById("error-detail").textContent = message;
 	goScreen("error");
 }
@@ -156,12 +180,34 @@ async function joinRoom(){
 	connectWebSocket(name);
 }
 
+/* ---------- URLで指定されたルームコードの存在確認 ---------- */
+
+async function checkRoomAndProceedToJoin(){
+	try{
+		const res = await fetch(WORKER_URL + "/api/rooms/status?room=" + encodeURIComponent(state.roomId));
+		let data = null;
+		try{ data = await res.json(); }catch(e){ /* ignore parse error */ }
+		if(!res.ok || !data || !data.exists){
+			showError("入力されたルームコードは存在しません。URLが正しいか確認するか、ホストに新しいURLを発行してもらってください。");
+			return;
+		}
+		if(data.phase && data.phase !== "lobby"){
+			showError("このルームはすでにゲームが開始されているため参加できません。");
+			return;
+		}
+		goScreen("join-name");
+	}catch(e){
+		showError("サーバーに接続できませんでした。WORKER_URL の設定を確認してください。");
+	}
+}
+
 /* ---------- WebSocket 接続 ---------- */
 
 function connectWebSocket(name){
 	const wsUrl = WORKER_URL.replace(/^http/, "ws") + "/ws?room=" + encodeURIComponent(state.roomId) + "&name=" + encodeURIComponent(name);
 	const ws = new WebSocket(wsUrl);
 	state.ws = ws;
+	state.gameEnded = false;
 
 	ws.onopen = () => {
 		// welcome メッセージを待つ
@@ -172,11 +218,15 @@ function connectWebSocket(name){
 		handleServerMessage(msg);
 	};
 	ws.onerror = () => {
+		if(state.gameEnded) return;
 		document.getElementById("error_join").textContent = "接続に失敗しました。ルームコードを確認してください。";
 	};
 	ws.onclose = () => {
-		if(!["result","voting","game"].includes(currentPhaseGuess())){
-			// 予期せぬ切断（ゲーム開始前）
+		if(state.gameEnded) return; // すでにエラー画面を表示済み
+		const phase = currentPhaseGuess();
+		if(["game", "vote", "result"].includes(phase)){
+			// ゲーム進行中に予期せず切断された
+			showError("サーバーとの接続が切れました。ゲームを終了します。");
 		}
 	};
 }
@@ -223,6 +273,14 @@ function handleServerMessage(msg){
 			break;
 		case "result":
 			showResultScreen(msg);
+			break;
+		case "sessionError":
+			// 誰かのセッションが切れてゲームが強制終了した
+			state.gameEnded = true;
+			if(state.ws){
+				try{ state.ws.close(); }catch(e){ /* ignore */ }
+			}
+			showError(msg.message || "参加者の接続が切れたため、ゲームを終了しました。");
 			break;
 	}
 }
@@ -299,7 +357,7 @@ function showGameScreen(msg){
 function frontZero(n){ return n < 10 ? "0" + n : "" + n; }
 
 function startTimer(endAt){
-	if(timerInterval) clearInterval(timerInterval);
+	stopTimer();
 	const timeEl = document.getElementById("time");
 	const tick = () => {
 		const remainMs = endAt - Date.now();
@@ -307,10 +365,18 @@ function startTimer(endAt){
 		timeEl.textContent = frontZero((sec / 60) | 0) + ":" + frontZero(sec % 60);
 		if(sec <= 0){
 			clearInterval(timerInterval);
+			timerInterval = null;
 		}
 	};
 	tick();
 	timerInterval = setInterval(tick, 250);
+}
+
+function stopTimer(){
+	if(timerInterval){
+		clearInterval(timerInterval);
+		timerInterval = null;
+	}
 }
 
 /* ---------- 投票画面 ---------- */
@@ -403,7 +469,7 @@ window.addEventListener("DOMContentLoaded", () => {
 	if(roomParam){
 		state.roomId = roomParam.toUpperCase();
 		document.getElementById("join-room-code").textContent = state.roomId;
-		goScreen("join-name");
+		checkRoomAndProceedToJoin();
 	} else {
 		goScreen("setup");
 	}
