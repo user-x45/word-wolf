@@ -202,15 +202,26 @@ async function checkRoomAndProceedToJoin(){
 	}
 }
 
-/* ---------- URLのルームコードパラメータを動的に更新 ---------- */
+/* ---------- URLのルームコード／状態パラメータを動的に更新 ---------- */
 
 function updateUrlRoomParam(roomId){
 	const url = new URL(location.href);
 	if(roomId){
 		url.searchParams.set("room", roomId);
+		url.searchParams.delete("join");
 	} else {
 		url.searchParams.delete("room");
 	}
+	history.replaceState(null, "", url.pathname + (url.search ? url.search : "") + url.hash);
+}
+
+// 参加者がルームコード入力画面にいることをURLに記録する。
+// これにより、この画面でリロードしてもホストの作成画面（トップページ）に
+// 戻らず、コード入力画面に留まれるようにする。
+function setUrlToJoinEntry(){
+	const url = new URL(location.href);
+	url.searchParams.delete("room");
+	url.searchParams.set("join", "1");
 	history.replaceState(null, "", url.pathname + (url.search ? url.search : "") + url.hash);
 }
 
@@ -260,6 +271,7 @@ function restartFlow(){
 	if(err) err.style.display = "none";
 
 	updateUrlRoomParam(null);
+	setUrlToJoinEntry();
 	goScreen("enter-code");
 }
 
@@ -522,6 +534,7 @@ window.addEventListener("DOMContentLoaded", () => {
 
 	const params = new URLSearchParams(location.search);
 	const roomParam = params.get("room");
+	const joinParam = params.get("join");
 
 	if(typeof WORKER_URL !== "string" || WORKER_URL.includes("YOUR-SUBDOMAIN")){
 		showError("WORKER_URL が設定されていません。config.js を編集し、デプロイした Cloudflare Workers の URL を設定してください。");
@@ -532,6 +545,8 @@ window.addEventListener("DOMContentLoaded", () => {
 		state.roomId = roomParam.toUpperCase();
 		document.getElementById("join-room-code").textContent = state.roomId;
 		checkRoomAndProceedToJoin();
+	} else if(joinParam){
+		goScreen("enter-code");
 	} else {
 		goScreen("setup");
 	}
