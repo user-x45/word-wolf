@@ -158,6 +158,7 @@ async function createRoom(){
 		}
 		state.roomId = data.roomId;
 		state.isHost = true;
+		updateUrlRoomParam(state.roomId);
 		connectWebSocket(name);
 	}catch(e){
 		document.getElementById("error_create").textContent = "サーバーに接続できませんでした。WORKER_URL の設定を確認してください。";
@@ -199,6 +200,67 @@ async function checkRoomAndProceedToJoin(){
 	}catch(e){
 		showError("サーバーに接続できませんでした。WORKER_URL の設定を確認してください。");
 	}
+}
+
+/* ---------- URLのルームコードパラメータを動的に更新 ---------- */
+
+function updateUrlRoomParam(roomId){
+	const url = new URL(location.href);
+	if(roomId){
+		url.searchParams.set("room", roomId);
+	} else {
+		url.searchParams.delete("room");
+	}
+	history.replaceState(null, "", url.pathname + (url.search ? url.search : "") + url.hash);
+}
+
+/* ---------- ルームコード手動入力（直接アクセス・やり直し用） ---------- */
+
+function submitEnterCode(){
+	const input = document.getElementById("enter-code-input");
+	const err = document.getElementById("error_enter_code");
+	const code = input.value.trim().toUpperCase();
+	if(!code){
+		err.textContent = "ルームコードを入力してください";
+		err.style.display = "block";
+		return;
+	}
+	err.style.display = "none";
+	state.roomId = code;
+	document.getElementById("join-room-code").textContent = state.roomId;
+	updateUrlRoomParam(state.roomId);
+	checkRoomAndProceedToJoin();
+}
+
+/* ---------- 最初からやり直す ---------- */
+
+function restartFlow(){
+	if(state.isHost){
+		// 主催者は今まで通り、完全にリロードしてホスト作成画面に戻す
+		location.href = location.pathname;
+		return;
+	}
+	// 参加者はページをリロードせず、ルームコード入力画面に戻す
+	stopTimer();
+	if(state.ws){
+		state.gameEnded = true;
+		try{ state.ws.close(); }catch(e){ /* ignore */ }
+	}
+	state.ws = null;
+	state.roomId = null;
+	state.playerId = null;
+	state.settings = null;
+	state.lastPlayers = [];
+	state.selectedVote = null;
+	state.gameEnded = false;
+
+	const input = document.getElementById("enter-code-input");
+	if(input) input.value = "";
+	const err = document.getElementById("error_enter_code");
+	if(err) err.style.display = "none";
+
+	updateUrlRoomParam(null);
+	goScreen("enter-code");
 }
 
 /* ---------- WebSocket 接続 ---------- */
