@@ -159,3 +159,11 @@ input.name-input::placeholder, input.text-input::placeholder{color:var(--text-mu
 }
 .vote-btn.selected{border-color:var(--accent);background:var(--accent);color:var(--accent-text);}
 .vote-btn:disabled{opacity:.5;}
+
+.host-end-fixed{
+	display:none;position:fixed;bottom:16px;right:16px;z-index:50;
+	background:var(--danger);color:#fff;border:none;border-radius:24px;
+	padding:11px 18px;font-size:.82em;font-weight:700;font-family:inherit;
+	box-shadow:0 3px 10px rgba(0,0,0,.3);cursor:pointer;
+}
+.host-end-fixed:active{opacity:.85;}
