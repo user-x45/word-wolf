@@ -60,6 +60,22 @@
 		<div class="error-msg" id="error_create"></div>
 	</section>
 
+	<!-- 1.5 参加者：ルームコード入力（直接アクセス・やり直し用） -->
+	<section id="screen-enter-code" class="screen">
+		<div class="center-stage" style="padding-top:20px;">
+			<div class="msg2" style="font-size:1.4em;">ルームコードを入力</div>
+			<p style="opacity:.75;">ホストから共有されたコードを入力してください</p>
+		</div>
+		<div class="card">
+			<div class="field">
+				<label>ルームコード</label>
+				<input type="text" id="enter-code-input" class="text-input" maxlength="8" placeholder="例：AB12CD" style="text-transform:uppercase;letter-spacing:.05em;">
+				<div class="error-msg" id="error_enter_code">ルームコードを入力してください</div>
+			</div>
+		</div>
+		<button class="btn-main" onclick="submitEnterCode()">次へ</button>
+	</section>
+
 	<!-- 1. 参加者：名前入力 -->
 	<section id="screen-join-name" class="screen">
 		<div class="center-stage" style="padding-top:20px;">
@@ -166,7 +182,7 @@
 			<div class="msg2" style="font-size:1.3em;color:var(--danger);">エラー</div>
 			<p id="error-detail" style="opacity:.8;"></p>
 		</div>
-		<button class="btn-sub" onclick="location.href = location.pathname">最初からやり直す</button>
+		<button class="btn-sub" onclick="restartFlow()">最初からやり直す</button>
 	</section>
 
 </div>
