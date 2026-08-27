@@ -71,6 +71,19 @@ header.top p{
 	font-size:.85em;
 	color:var(--text-muted);
 }
+.online-link{
+	display:inline-block;
+	padding:8px 20px;
+	border-radius:6px;
+	border:1px solid var(--accent);
+	background:transparent;
+	color:var(--accent);
+	font-size:.85em;
+	font-weight:600;
+	text-decoration:none;
+	margin-bottom:16px;
+}
+.online-link:active{opacity:.8;}
 
 .card{
 	background:var(--surface);
@@ -237,6 +250,7 @@ input.name-input::placeholder{color:var(--text-muted);}
 	font-size:.8em;
 	color:var(--text-muted);
 	margin-top:24px;
+
 }
 
 .timer-circle{
@@ -288,6 +302,7 @@ input.name-input::placeholder{color:var(--text-muted);}
 <header class="top">
 	<h1>ワードウルフ</h1>
 	<p>お題が違う人（ウルフ）を会話で見つけるゲーム</p>
+	<a href="/online/" class="online-link">オンライン版はこちら</a>
 </header>
 
 <div class="wrap">
