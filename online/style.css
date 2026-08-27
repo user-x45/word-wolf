@@ -167,3 +167,4 @@ input.name-input::placeholder, input.text-input::placeholder{color:var(--text-mu
 	box-shadow:0 3px 10px rgba(0,0,0,.3);cursor:pointer;
 }
 .host-end-fixed:active{opacity:.85;}
+.host-end-fixed i{margin-right:6px;}
