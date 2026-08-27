@@ -50,6 +50,19 @@ header.top{
 }
 header.top h1{font-size:1.3em;margin:0;font-weight:600;letter-spacing:.02em;}
 header.top p{margin:4px 0 16px;font-size:.85em;color:var(--text-muted);}
+.online-link{
+	display:inline-block;
+	padding:8px 20px;
+	border-radius:6px;
+	border:1px solid var(--accent);
+	background:transparent;
+	color:var(--accent);
+	font-size:.85em;
+	font-weight:600;
+	text-decoration:none;
+	margin-bottom:16px;
+}
+.online-link:active{opacity:.8;}
 
 .card{
 	background:var(--surface);border:1px solid var(--border);
