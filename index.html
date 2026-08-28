@@ -4,37 +4,35 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ワードウルフ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rampart+One&family=Zen+Kaku+Gothic+New:wght@500;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root{
-	--bg:#f5f5f6;
-	--surface:#ffffff;
-	--surface-2:#eef0f2;
-	--border:#d8dade;
-	--text:#1a1a1e;
-	--text-muted:#5b5e66;
-	--accent:#2f5fdb;
-	--accent-text:#ffffff;
-	--danger:#c62a2a;
-	--radius:8px;
-}
-@media (prefers-color-scheme: dark){
-	:root{
-		--bg:#121214;
-		--surface:#1b1c1f;
-		--surface-2:#242529;
-		--border:#333438;
-		--text:#e7e7ea;
-		--text-muted:#9a9ca3;
-		--accent:#5b8bff;
-		--accent-text:#0c0d0f;
-		--danger:#ff6b6b;
-	}
+	--bg-1:#0a0420;
+	--bg-2:#1c0a3e;
+	--surface:#1c1440;
+	--surface-2:#271a54;
+	--border:#4a3583;
+	--border-soft:#3a2966;
+	--text:#f6f1ff;
+	--text-muted:#a99bd6;
+	--accent:#ff2e88;
+	--accent-soft:#ff2e8833;
+	--accent2:#00e5ff;
+	--accent2-soft:#00e5ff33;
+	--gold:#ffce3d;
+	--danger:#ff4d4d;
+	--radius:14px;
+	--font-display:"Rampart One", "Zen Kaku Gothic New", sans-serif;
+	--font-body:"Zen Kaku Gothic New", -apple-system, BlinkMacSystemFont, "Hiragino Kaku Gothic ProN", sans-serif;
+	--font-mono:"Space Mono", monospace;
 }
 *{box-sizing:border-box;}
 html,body{
 	margin:0;padding:0;
-	font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;
-	background:var(--bg);
+	font-family:var(--font-body);
+	background:var(--bg-1);
 	color:var(--text);
 	-webkit-tap-highlight-color:transparent;
 }
@@ -43,266 +41,405 @@ body{
 	display:flex;
 	flex-direction:column;
 	align-items:center;
-	padding:0 0 40px;
+	padding:0 0 48px;
+	position:relative;
+	overflow-x:hidden;
+	background:
+		radial-gradient(ellipse 90% 60% at 15% -5%, #4a1a8a55, transparent),
+		radial-gradient(ellipse 70% 50% at 100% 10%, #ff2e8822, transparent),
+		radial-gradient(ellipse 60% 40% at 90% 90%, #00e5ff1a, transparent),
+		linear-gradient(180deg, var(--bg-1), var(--bg-2) 60%, var(--bg-1));
+	background-attachment:fixed;
 }
+/* drifting star field */
+body::before{
+	content:"";
+	position:fixed;
+	inset:0;
+	pointer-events:none;
+	z-index:0;
+	background-image:
+		radial-gradient(2px 2px at 10% 20%, #ffffffaa, transparent),
+		radial-gradient(1.5px 1.5px at 80% 15%, #ffffff88, transparent),
+		radial-gradient(1.5px 1.5px at 60% 70%, #ffffff77, transparent),
+		radial-gradient(2px 2px at 30% 85%, #ffffff99, transparent),
+		radial-gradient(1px 1px at 90% 60%, #ffffff66, transparent),
+		radial-gradient(1.5px 1.5px at 45% 40%, #ffffff55, transparent);
+	background-size:600px 600px;
+	animation:twinkle 6s ease-in-out infinite alternate;
+	opacity:.6;
+}
+@keyframes twinkle{
+	from{opacity:.35;}
+	to{opacity:.75;}
+}
+@media (prefers-reduced-motion: reduce){
+	body::before{animation:none;}
+}
+
 .wrap{
 	width:100%;
 	max-width:480px;
-	padding:0 16px;
+	padding:0 18px;
+	position:relative;
+	z-index:1;
 }
 .screen{display:none;}
-.screen.active{display:block;}
+.screen.active{display:block; animation:riseIn .4s cubic-bezier(.2,.8,.2,1);}
+@keyframes riseIn{
+	from{opacity:0; transform:translateY(10px);}
+	to{opacity:1; transform:translateY(0);}
+}
+@media (prefers-reduced-motion: reduce){
+	.screen.active{animation:none;}
+}
 
 header.top{
 	width:100%;
+	max-width:480px;
 	text-align:center;
-	padding:28px 0 4px;
-	border-bottom:1px solid var(--border);
-	margin-bottom:20px;
+	padding:34px 20px 18px;
+	position:relative;
+	z-index:1;
+}
+header.top .eyebrow{
+	font-family:var(--font-mono);
+	font-size:.7em;
+	letter-spacing:.35em;
+	color:var(--accent2);
+	text-transform:uppercase;
+	margin-bottom:10px;
 }
 header.top h1{
-	font-size:1.3em;
+	font-family:var(--font-display);
+	font-size:2.5em;
 	margin:0;
-	font-weight:600;
-	letter-spacing:.02em;
+	font-weight:400;
+	letter-spacing:.04em;
+	background:linear-gradient(90deg, var(--accent2), #ffffff 45%, var(--accent));
+	-webkit-background-clip:text;
+	background-clip:text;
+	-webkit-text-fill-color:transparent;
+	filter:drop-shadow(0 0 18px var(--accent-soft));
+	line-height:1.3;
 }
 header.top p{
-	margin:4px 0 16px;
-	font-size:.85em;
+	margin:10px 0 18px;
+	font-size:.88em;
 	color:var(--text-muted);
+	font-weight:500;
 }
 .online-link{
 	display:inline-block;
-	padding:8px 20px;
-	border-radius:6px;
-	border:1px solid var(--accent);
+	padding:10px 24px;
+	border-radius:999px;
+	border:1px solid var(--accent2);
 	background:transparent;
-	color:var(--accent);
-	font-size:.85em;
-	font-weight:600;
+	color:var(--accent2);
+	font-size:.82em;
+	font-weight:700;
 	text-decoration:none;
-	margin-bottom:16px;
+	margin-bottom:6px;
+	transition:box-shadow .2s, transform .15s;
+	box-shadow:0 0 0 var(--accent2-soft);
 }
-.online-link:active{opacity:.8;}
+.online-link:active{
+	transform:scale(.97);
+	box-shadow:0 0 22px var(--accent2-soft);
+}
 
 .card{
-	background:var(--surface);
-	border:1px solid var(--border);
+	background:linear-gradient(160deg, var(--surface), var(--surface-2));
+	border:1px solid var(--border-soft);
 	border-radius:var(--radius);
-	padding:18px 16px;
-	margin-bottom:14px;
+	padding:20px 18px;
+	margin-bottom:16px;
+	box-shadow:0 10px 30px -12px #00000080, inset 0 1px 0 #ffffff0d;
+	position:relative;
 }
 
-.field{margin-bottom:18px;}
+.field{margin-bottom:22px;}
 .field:last-child{margin-bottom:0;}
 .field label{
 	display:block;
-	font-weight:600;
-	font-size:.85em;
-	margin-bottom:8px;
-	color:var(--text-muted);
+	font-weight:700;
+	font-size:.82em;
+	margin-bottom:10px;
+	color:var(--accent2);
+	letter-spacing:.05em;
 }
 .stepper{
 	display:flex;
 	align-items:center;
 	justify-content:center;
-	gap:16px;
+	gap:20px;
 }
 .stepper button{
-	width:36px;height:36px;
-	border-radius:6px;
+	width:42px;height:42px;
+	border-radius:10px;
 	border:1px solid var(--border);
-	background:var(--surface-2);
+	background:var(--bg-2);
 	color:var(--text);
-	font-size:1.1em;
-	font-weight:600;
+	font-size:1.2em;
+	font-weight:700;
 	cursor:pointer;
+	transition:background .15s, transform .1s, box-shadow .15s;
 }
-.stepper button:active{background:var(--border);}
+.stepper button:active{
+	background:var(--accent);
+	border-color:var(--accent);
+	transform:scale(.94);
+	box-shadow:0 0 16px var(--accent-soft);
+}
 .stepper .val{
-	min-width:60px;
+	min-width:70px;
 	text-align:center;
-	font-size:1.3em;
-	font-weight:600;
+	font-family:var(--font-mono);
+	font-size:1.6em;
+	font-weight:700;
+	color:var(--text);
 }
-.stepper .val small{display:inline;font-size:.6em;font-weight:400;color:var(--text-muted);margin-left:2px;}
+.stepper .val small{display:inline;font-size:.55em;font-weight:400;color:var(--text-muted);margin-left:2px;font-family:var(--font-body);}
 
 .error-msg{
 	display:none;
 	color:var(--danger);
 	font-size:.8em;
-	margin-top:6px;
+	margin-top:8px;
 	text-align:center;
+	font-weight:600;
 }
 
 .time-row{
 	display:flex;
 	align-items:center;
 	justify-content:center;
-	gap:8px;
+	gap:10px;
 	font-size:1em;
-	font-weight:600;
+	font-weight:700;
 }
 .time-row input.time-input{
-	width:52px;
+	width:58px;
 	text-align:center;
-	background:var(--surface-2);
+	background:var(--bg-2);
 	color:var(--text);
 	border:1px solid var(--border);
-	border-radius:6px;
-	padding:8px 4px;
-	font-size:16px;
-	font-weight:600;
-	font-family:inherit;
+	border-radius:8px;
+	padding:10px 4px;
+	font-size:17px;
+	font-weight:700;
+	font-family:var(--font-mono);
+}
+.time-row input.time-input:focus{
+	outline:none;
+	border-color:var(--accent2);
+	box-shadow:0 0 0 3px var(--accent2-soft);
 }
 
 .cat-grid{
 	display:grid;
 	grid-template-columns:1fr 1fr;
-	gap:8px;
+	gap:10px;
 }
 .cat-btn{
 	border:1px solid var(--border);
-	background:var(--surface-2);
+	background:var(--bg-2);
 	color:var(--text);
-	border-radius:6px;
-	padding:12px 8px;
+	border-radius:10px;
+	padding:14px 8px;
 	font-size:.95em;
-	font-weight:500;
-	font-family:inherit;
+	font-weight:700;
+	font-family:var(--font-body);
 	cursor:pointer;
+	transition:all .15s;
 }
 .cat-btn.selected{
 	border-color:var(--accent);
-	background:var(--accent);
-	color:var(--accent-text);
-	font-weight:600;
+	background:linear-gradient(135deg, var(--accent), #a0166e);
+	color:#fff;
+	box-shadow:0 4px 18px -4px var(--accent-soft), 0 0 0 1px var(--accent-soft);
+	transform:translateY(-1px);
 }
 .cat-btn.random{grid-column:1 / span 2;}
+.cat-btn.random.selected{
+	background:linear-gradient(135deg, var(--gold), #b8781a);
+	border-color:var(--gold);
+	box-shadow:0 4px 18px -4px #ffce3d55;
+}
 
 .btn-main{
 	width:100%;
-	padding:13px;
-	border:1px solid var(--accent);
-	border-radius:6px;
-	background:var(--accent);
-	color:var(--accent-text);
-	font-size:1em;
-	font-weight:600;
-	font-family:inherit;
+	padding:16px;
+	border:none;
+	border-radius:12px;
+	background:linear-gradient(120deg, var(--accent), #b0157a 55%, var(--accent2));
+	background-size:180% 180%;
+	color:#fff;
+	font-size:1.05em;
+	font-weight:700;
+	font-family:var(--font-body);
+	letter-spacing:.02em;
 	cursor:pointer;
-	margin-top:4px;
+	margin-top:6px;
+	box-shadow:0 8px 24px -8px #ff2e8877, inset 0 1px 0 #ffffff33;
+	transition:transform .12s, box-shadow .2s, background-position .4s;
 }
-.btn-main:active{opacity:.85;}
+.btn-main:active{
+	transform:scale(.98);
+	background-position:80% 20%;
+	box-shadow:0 4px 14px -6px #ff2e8877;
+}
 .btn-sub{
 	width:100%;
-	padding:12px;
+	padding:14px;
 	border:1px solid var(--border);
-	border-radius:6px;
-	background:var(--surface);
-	color:var(--text);
+	border-radius:12px;
+	background:transparent;
+	color:var(--text-muted);
 	font-size:.95em;
-	font-weight:500;
-	font-family:inherit;
+	font-weight:600;
+	font-family:var(--font-body);
 	cursor:pointer;
-	margin-top:8px;
+	margin-top:10px;
+	transition:border-color .15s, color .15s;
+}
+.btn-sub:active{
+	border-color:var(--accent2);
+	color:var(--accent2);
 }
 
 input.name-input{
 	width:100%;
-	padding:12px;
-	border-radius:6px;
+	padding:13px;
+	border-radius:10px;
 	border:1px solid var(--border);
-	background:var(--surface-2);
+	background:var(--bg-2);
 	color:var(--text);
 	font-size:1em;
-	font-family:inherit;
+	font-family:var(--font-body);
 	margin-bottom:10px;
+}
+input.name-input:focus{
+	outline:none;
+	border-color:var(--accent2);
+	box-shadow:0 0 0 3px var(--accent2-soft);
 }
 input.name-input::placeholder{color:var(--text-muted);}
 
 .center-stage{
 	text-align:center;
-	padding:36px 8px 20px;
+	padding:30px 8px 10px;
 }
 .player-badge{
 	display:inline-block;
-	background:var(--surface-2);
-	border:1px solid var(--border);
-	border-radius:6px;
-	padding:6px 18px;
-	font-weight:600;
-	margin-bottom:18px;
+	background:linear-gradient(135deg, var(--surface-2), var(--surface));
+	border:1px solid var(--accent2);
+	border-radius:999px;
+	padding:8px 24px;
+	font-weight:700;
+	margin-bottom:22px;
+	box-shadow:0 0 20px -6px var(--accent2-soft);
+	color:var(--accent2);
 }
 .msg2{
-	font-size:1.6em;
-	font-weight:700;
+	font-family:var(--font-display);
+	font-size:1.7em;
+	font-weight:400;
 	min-height:1.3em;
-	margin:8px 0 26px;
+	margin:10px 0 28px;
 	color:var(--text);
+	text-shadow:0 0 20px #ff2e8855;
 }
 .msg{
 	font-size:1em;
 	color:var(--text-muted);
 	min-height:1.3em;
+	font-weight:600;
 }
 .tap-hint{
-	font-size:.8em;
+	font-size:.78em;
 	color:var(--text-muted);
-	margin-top:24px;
-
+	margin-top:26px;
+	font-family:var(--font-mono);
 }
 
+/* signature element: glowing wolf-eye / moon timer ring */
 .timer-circle{
-	width:200px;height:200px;
-	margin:16px auto 8px;
+	--progress:1;
+	width:220px;height:220px;
+	margin:20px auto 10px;
 	border-radius:50%;
-	border:3px solid var(--border);
 	display:flex;align-items:center;justify-content:center;
+	position:relative;
+	background:
+		radial-gradient(circle at 50% 50%, var(--bg-2) 62%, transparent 63%),
+		conic-gradient(from -90deg, var(--accent2) calc(var(--progress) * 360deg), #ffffff14 0deg);
+	box-shadow:0 0 40px -6px var(--accent2-soft), inset 0 0 30px #00000066;
+	transition:background 0.25s linear;
+}
+.timer-circle::after{
+	content:"";
+	position:absolute;
+	inset:10px;
+	border-radius:50%;
+	border:1px solid var(--border-soft);
 }
 .timer-circle .time{
-	font-size:2.2em;
+	font-family:var(--font-mono);
+	font-size:2.3em;
 	font-weight:700;
 	font-variant-numeric:tabular-nums;
+	color:var(--text);
+	z-index:1;
+	text-shadow:0 0 16px var(--accent2-soft);
 }
 .category-tag{
 	display:inline-block;
 	background:var(--surface-2);
-	border:1px solid var(--border);
-	border-radius:6px;
-	padding:4px 14px;
-	font-size:.8em;
-	margin-bottom:10px;
-	color:var(--text-muted);
+	border:1px solid var(--gold);
+	color:var(--gold);
+	border-radius:999px;
+	padding:5px 18px;
+	font-size:.78em;
+	font-weight:700;
+	margin-bottom:14px;
+	letter-spacing:.04em;
 }
 
 .reveal-list p{
-	background:var(--surface-2);
-	border:1px solid var(--border);
-	border-radius:6px;
-	padding:10px 14px;
-	margin:8px 0;
+	background:var(--bg-2);
+	border:1px solid var(--border-soft);
+	border-left:4px solid var(--accent2);
+	border-radius:8px;
+	padding:12px 14px;
+	margin:10px 0;
 	font-size:.95em;
+	font-weight:500;
 }
-.reveal-list p b{color:var(--text);}
+.reveal-list p.is-wolf{
+	border-left-color:var(--accent);
+}
+.reveal-list p b{color:var(--gold); font-weight:700;}
 
 .progress-dots{
-	display:flex;justify-content:center;gap:6px;margin-bottom:20px;
+	display:flex;justify-content:center;gap:7px;margin-bottom:22px;
 }
 .progress-dots span{
-	width:7px;height:7px;border-radius:50%;background:var(--border);
+	width:8px;height:8px;border-radius:50%;background:var(--border);
+	transition:background .2s, box-shadow .2s;
 }
-.progress-dots span.done{background:var(--accent);}
-.progress-dots span.current{background:var(--text);}
+.progress-dots span.done{background:var(--accent2); box-shadow:0 0 8px var(--accent2-soft);}
+.progress-dots span.current{background:var(--accent); box-shadow:0 0 10px var(--accent-soft);}
 
 </style>
 </head>
 <body>
 
 <header class="top">
+	<div class="eyebrow">🐺 SOCIAL DEDUCTION PARTY GAME</div>
 	<h1>ワードウルフ</h1>
 	<p>お題が違う人（ウルフ）を会話で見つけるゲーム</p>
-	<a href="/online/" class="online-link">オンライン版はこちら</a>
+	<a href="/online/" class="online-link">オンライン版はこちら →</a>
 </header>
 
 <div class="wrap">
@@ -345,7 +482,7 @@ input.name-input::placeholder{color:var(--text-muted);}
 			<div class="cat-grid" id="cat-grid"></div>
 		</div>
 
-		<button class="btn-main" onclick="roommakeNext()">お題を決めてすすむ</button>
+		<button class="btn-main" onclick="roommakeNext()">🎲 お題を決めてすすむ</button>
 	</section>
 
 	<!-- 2. 名前入力画面 -->
@@ -370,7 +507,7 @@ input.name-input::placeholder{color:var(--text-muted);}
 			<div class="msg2" id="msg2"></div>
 			<input type="hidden" id="nowId" value="0">
 			<button class="btn-main" id="next" onclick="nextMemberOdai()">はい</button>
-			<div class="tap-hint">端末を次の人に回してからタップしてください</div>
+			<div class="tap-hint">📱 端末を次の人に回してからタップしてください</div>
 		</div>
 	</section>
 
@@ -378,33 +515,33 @@ input.name-input::placeholder{color:var(--text-muted);}
 	<section id="screen-game" class="screen">
 		<div class="center-stage">
 			<div class="category-tag" id="game-category"></div>
-			<p style="opacity:.8;margin-bottom:0;">自分のお題について、バレないように話し合おう！</p>
+			<p style="opacity:.85;margin-bottom:0;font-weight:600;">自分のお題について、バレないように話し合おう！</p>
 			<div class="timer-circle"><div class="time" id="time">--:--</div></div>
-			<p style="opacity:.6;font-size:.85em;">トークタイムが終わると自動的に次の画面に進みます</p>
+			<p style="opacity:.55;font-size:.85em;">トークタイムが終わると自動的に次の画面に進みます</p>
 			<button class="btn-sub" onclick="cancelGame()">最初の画面に戻る</button>
 		</div>
 	</section>
 
 	<!-- 4.5 終了確認画面（答えが見える前のワンクッション） -->
 	<section id="screen-confirm" class="screen">
-		<div class="center-stage" style="padding-top:20px;">
-			<div class="msg2" style="font-size:1.5em;">トーク終了</div>
-			<p style="opacity:.8;">話し合いは終わりましたか？<br>次の画面で答えが表示されます。</p>
+		<div class="center-stage" style="padding-top:24px;">
+			<div class="msg2" style="font-size:1.5em;">⏰ トーク終了</div>
+			<p style="opacity:.85;">話し合いは終わりましたか？<br>次の画面で答えが表示されます。</p>
 		</div>
-		<button class="btn-main" onclick="revealAnswers()">答え合わせをする</button>
+		<button class="btn-main" onclick="revealAnswers()">🔍 答え合わせをする</button>
 	</section>
 
 	<!-- 5. 結果発表画面 -->
 	<section id="screen-finish" class="screen">
-		<div class="center-stage" style="padding-top:20px;">
-			<div class="msg2" style="font-size:1.5em;">トーク終了！</div>
-			<p style="opacity:.8;">誰がウルフだったか話し合おう。答え合わせはこちら</p>
+		<div class="center-stage" style="padding-top:24px;">
+			<div class="msg2" style="font-size:1.5em;">🐺 トーク終了！</div>
+			<p style="opacity:.85;">誰がウルフだったか話し合おう。答え合わせはこちら</p>
 		</div>
 		<div class="card">
 			<div class="reveal-list" id="waitmember"></div>
 		</div>
-		<button class="btn-main" onclick="sameThemeContinue()">お題だけを変えて続行</button>
-		<button class="btn-main" onclick="openOdaiChange()">テーマを変えて続行</button>
+		<button class="btn-main" onclick="sameThemeContinue()">🔁 お題だけを変えて続行</button>
+		<button class="btn-main" onclick="openOdaiChange()">🎨 テーマを変えて続行</button>
 		<button class="btn-sub" onclick="resetAll()">最初からやり直す</button>
 	</section>
 
