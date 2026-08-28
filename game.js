@@ -300,17 +300,21 @@ function timer(){
 	if(timerInterval) clearInterval(timerInterval);
 	const timerSec = state.talktime - 0;
 	const timeEl = document.getElementById("time");
+	const ringEl = document.querySelector(".timer-circle");
 	if(timerSec <= 0){
 		timeEl.textContent = "∞";
+		if(ringEl) ringEl.style.setProperty("--progress", 1);
 		return;
 	}
 	const startTime = Date.now() / 1000;
 	timeEl.textContent = frontZero((timerSec / 60) | 0) + ":" + frontZero(timerSec % 60);
+	if(ringEl) ringEl.style.setProperty("--progress", 1);
 	timerInterval = setInterval(() => {
 		const currentTime = Date.now() / 1000;
 		let sec = timerSec - Math.floor(currentTime - startTime);
 		if(sec < 0) sec = 0;
 		timeEl.textContent = frontZero((sec / 60) | 0) + ":" + frontZero(sec % 60);
+		if(ringEl) ringEl.style.setProperty("--progress", Math.max(sec / timerSec, 0));
 		if(sec === 0){
 			clearInterval(timerInterval);
 			confirmFinish();
@@ -339,7 +343,8 @@ function setAnnounce(){
 		const odai = state.odaimap.charAt(i) === "0" ? state.val1 : state.val2;
 		const isWolf = state.odaimap.charAt(i) === "1";
 		const p = document.createElement("p");
-		p.innerHTML = (isWolf ? "[ウルフ] " : "[市民] ") + state.members[i] + " さんは <b>" + odai + "</b> でした";
+		p.className = isWolf ? "is-wolf" : "";
+		p.innerHTML = (isWolf ? "🐺 [ウルフ] " : "🙂 [市民] ") + state.members[i] + " さんは <b>" + odai + "</b> でした";
 		wrap.appendChild(p);
 	}
 }
