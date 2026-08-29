@@ -25,6 +25,15 @@
 	<section id="screen-setup" class="screen">
 		<div class="card">
 			<div class="field">
+				<label>すでにルームコードをお持ちの方</label>
+				<input type="text" id="enter-code-input" class="text-input" maxlength="8" placeholder="例：AB12CD" style="text-transform:uppercase;letter-spacing:.05em;">
+				<div class="error-msg" id="error_enter_code">ルームコードを入力してください</div>
+			</div>
+			<button class="btn-sub" onclick="submitEnterCode()">コードで参加する</button>
+		</div>
+
+		<div class="card">
+			<div class="field">
 				<label>あなたのユーザー名</label>
 				<input type="text" id="hostname-input" class="text-input" maxlength="20" placeholder="ユーザー名を入力">
 				<div class="error-msg" id="error_hostname">ユーザー名を入力してください</div>
@@ -64,22 +73,6 @@
 
 		<button class="btn-main" id="create-room-btn" onclick="createRoom()">🎲 ルームを作成する</button>
 		<div class="error-msg" id="error_create"></div>
-	</section>
-
-	<!-- 1.5 参加者：ルームコード入力（直接アクセス・やり直し用） -->
-	<section id="screen-enter-code" class="screen">
-		<div class="center-stage" style="padding-top:20px;">
-			<div class="msg2" style="font-size:1.4em;">ルームコードを入力</div>
-			<p style="opacity:.75;">ホストから共有されたコードを入力してください</p>
-		</div>
-		<div class="card">
-			<div class="field">
-				<label>ルームコード</label>
-				<input type="text" id="enter-code-input" class="text-input" maxlength="8" placeholder="例：AB12CD" style="text-transform:uppercase;letter-spacing:.05em;">
-				<div class="error-msg" id="error_enter_code">ルームコードを入力してください</div>
-			</div>
-		</div>
-		<button class="btn-main" onclick="submitEnterCode()">次へ</button>
 	</section>
 
 	<!-- 1. 参加者：名前入力 -->
