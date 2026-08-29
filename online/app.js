@@ -36,6 +36,8 @@ const HOST_END_VISIBLE_SCREENS = ["share", "waiting", "game", "vote", "result", 
 function goScreen(name){
 	document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
 	document.getElementById("screen-" + name).classList.add("active");
+	const onlineLink = document.getElementById("online-link");
+	if(onlineLink) onlineLink.style.display = (name === "setup") ? "" : "none";
 	window.scrollTo(0, 0);
 	updateHostEndButtonVisibility(name);
 }
@@ -433,10 +435,13 @@ function frontZero(n){ return n < 10 ? "0" + n : "" + n; }
 function startTimer(endAt){
 	stopTimer();
 	const timeEl = document.getElementById("time");
+	const ringEl = document.querySelector(".timer-circle");
+	const totalMs = Math.max(endAt - Date.now(), 1);
 	const tick = () => {
 		const remainMs = endAt - Date.now();
 		let sec = Math.max(0, Math.ceil(remainMs / 1000));
 		timeEl.textContent = frontZero((sec / 60) | 0) + ":" + frontZero(sec % 60);
+		if(ringEl) ringEl.style.setProperty("--progress", Math.min(Math.max(remainMs / totalMs, 0), 1));
 		if(sec <= 0){
 			clearInterval(timerInterval);
 			timerInterval = null;
@@ -487,7 +492,7 @@ function showResultScreen(msg){
 	msg.members.forEach(m => {
 		const p = document.createElement("p");
 		p.className = m.isWolf ? "is-wolf" : "";
-		p.innerHTML = (m.isWolf ? "[ウルフ] " : "[市民] ") + escapeHtml(m.name) + " さんは <b>" + escapeHtml(m.word) + "</b> でした";
+		p.innerHTML = (m.isWolf ? "🐺 [ウルフ] " : "🙂 [市民] ") + escapeHtml(m.name) + " さんは <b>" + escapeHtml(m.word) + "</b> でした";
 		list.appendChild(p);
 	});
 
