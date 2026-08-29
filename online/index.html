@@ -4,15 +4,19 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ワードウルフONLINE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=RocknRoll+One&family=Zen+Kaku+Gothic+New:wght@500;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 <body>
 
 <header class="top">
+	<div class="eyebrow">🐺 SOCIAL DEDUCTION PARTY GAME</div>
 	<h1>ワードウルフ ONLINE</h1>
 	<p>お題が違う人（ウルフ）を会話で見つける、オンライン対応版</p>
-	<a href="/" class="online-link">通常版はこちら</a>
+	<a href="/" class="online-link" id="online-link">通常版はこちら</a>
 </header>
 
 <div class="wrap">
@@ -58,7 +62,7 @@
 			<div class="cat-grid" id="cat-grid"></div>
 		</div>
 
-		<button class="btn-main" id="create-room-btn" onclick="createRoom()">ルームを作成する</button>
+		<button class="btn-main" id="create-room-btn" onclick="createRoom()">🎲 ルームを作成する</button>
 		<div class="error-msg" id="error_create"></div>
 	</section>
 
@@ -91,7 +95,7 @@
 				<div class="error-msg" id="error_joinname">名前を入力してください</div>
 			</div>
 		</div>
-		<button class="btn-main" onclick="joinRoom()">参加する</button>
+		<button class="btn-main" onclick="joinRoom()">🚪 参加する</button>
 		<div class="error-msg" id="error_join"></div>
 	</section>
 
@@ -104,7 +108,7 @@
 		<div class="room-code" id="share-room-code">------</div>
 		<div class="card">
 			<div class="share-url" id="share-url"></div>
-			<button class="btn-sub" onclick="copyShareUrl()">URLをコピー</button>
+			<button class="btn-sub" onclick="copyShareUrl()">🔗 URLをコピー</button>
 			<div class="copy-toast" id="copy-toast"></div>
 		</div>
 		<button class="btn-main" onclick="goScreen('waiting')">参加者を待つ画面へ</button>
@@ -119,7 +123,7 @@
 		<div class="card">
 			<ul class="player-list" id="player-list"></ul>
 		</div>
-		<button class="btn-main" id="start-game-btn" onclick="sendStart()" disabled>ゲームを開始する</button>
+		<button class="btn-main" id="start-game-btn" onclick="sendStart()" disabled>🎬 ゲームを開始する</button>
 		<p style="text-align:center;font-size:.8em;opacity:.6;" id="waiting-hint">全員揃うとホストが開始できます</p>
 	</section>
 
@@ -150,18 +154,18 @@
 	<!-- 6. 結果発表 -->
 	<section id="screen-result" class="screen">
 		<div class="center-stage" style="padding-top:10px;">
-			<div class="msg2" style="font-size:1.4em;">結果発表</div>
+			<div class="msg2" style="font-size:1.4em;">🐺 結果発表</div>
 		</div>
 		<div class="card">
 			<div class="reveal-list" id="result-list"></div>
 		</div>
 		<div class="card">
-			<p style="margin:0 0 6px;font-weight:600;font-size:.9em;color:var(--text-muted);">得票数</p>
+			<p style="margin:0 0 6px;font-weight:700;font-size:.9em;color:var(--accent2);">得票数</p>
 			<div id="result-votes"></div>
 		</div>
 		<div id="host-controls" style="display:none;">
-			<button class="btn-main" onclick="sendSameTheme()">お題だけを変えて続行</button>
-			<button class="btn-main" onclick="openChangeTheme()">テーマを変えて続行</button>
+			<button class="btn-main" onclick="sendSameTheme()">🔁 お題だけを変えて続行</button>
+			<button class="btn-main" onclick="openChangeTheme()">🎨 テーマを変えて続行</button>
 		</div>
 		<p id="nonhost-wait" style="text-align:center;font-size:.85em;opacity:.7;display:none;">ホストが次のラウンドを開始するのを待っています…</p>
 	</section>
@@ -181,7 +185,7 @@
 	<!-- 接続エラー -->
 	<section id="screen-error" class="screen">
 		<div class="center-stage">
-			<div class="msg2" style="font-size:1.3em;color:var(--danger);">エラー</div>
+			<div class="msg2" style="font-size:1.3em;color:var(--danger);">⚠️ エラー</div>
 			<p id="error-detail" style="opacity:.8;"></p>
 		</div>
 		<button class="btn-sub" onclick="restartFlow()">最初からやり直す</button>
