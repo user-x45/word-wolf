@@ -98,6 +98,8 @@ function changeCount(type, delta){
 function goScreen(name){
 	document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
 	document.getElementById("screen-" + name).classList.add("active");
+	const onlineLink = document.getElementById("online-link");
+	if(onlineLink) onlineLink.style.display = (name === "setup") ? "" : "none";
 	window.scrollTo(0, 0);
 }
 
